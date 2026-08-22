@@ -20,12 +20,17 @@ supabase: Client = create_client(
 
 
 def signup_user(email: str, password: str):
-    response = supabase.auth.sign_up({
-        "email": email,
-        "password": password
-    })
+    try:
+        response = supabase.auth.sign_up({
+            "email": email,
+            "password": password
+        })
 
-    return response
+        return response
+
+    except Exception as error:
+        print(f"Supabase signup error: {error}")
+        raise
 
 
 def login_user(email: str, password: str):

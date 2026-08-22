@@ -1,7 +1,7 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Response
 from pydantic import BaseModel, EmailStr
 
-from app.auth import login_user, signup_user
+from app.auth import login_user, signup_user, supabase
 from app.dependencies import get_current_user
 
 
@@ -109,3 +109,28 @@ def protected_profile(
         "email": user.email,
         "created_at": user.created_at
     }
+
+
+@app.get("/protected/dashboard")
+def protected_dashboard(
+    user=Depends(get_current_user)
+):
+    return {
+        "message": "Welcome to your protected dashboard.",
+        "user_id": user.id
+    }
+
+
+@app.post("/auth/logout", status_code=204)
+def logout(
+    user=Depends(get_current_user)
+):
+    try:
+        supabase.auth.sign_out()
+        return Response(status_code=204)
+
+    except Exception:
+        raise HTTPException(
+            status_code=401,
+            detail="Unable to logout"
+        )

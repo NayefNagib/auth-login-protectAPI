@@ -139,6 +139,5 @@ Do not commit:
 * Access tokens
 * Refresh tokens
 
-## License
 
-Eng Ahmed Elsadany
+Eng Ahmed Mohamed Nagib

@@ -1,7 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
+
 from pydantic import BaseModel, EmailStr
 
 from app.auth import login_user, signup_user
+from app.dependencies import get_access_token
 
 
 app = FastAPI(
@@ -90,3 +92,20 @@ def login(data: AuthRequest):
             status_code=401,
             detail="Invalid login credentials"
         )
+
+
+@app.get("/public/info")
+def public_info():
+    return {
+        "message": "Welcome stranger! This info is public."
+    }
+
+
+@app.get("/protected/profile")
+def protected_profile(
+    token: str = Depends(get_access_token)
+):
+    return {
+        "message": "Protected profile endpoint",
+        "token": token
+    }

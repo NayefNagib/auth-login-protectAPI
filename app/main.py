@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, EmailStr
 
-from app.auth import signup_user, login_user
+from app.auth import login_user, signup_user
 
 
 app = FastAPI(

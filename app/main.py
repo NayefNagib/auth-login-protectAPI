@@ -1,9 +1,8 @@
 from fastapi import Depends, FastAPI, HTTPException
-
 from pydantic import BaseModel, EmailStr
 
 from app.auth import login_user, signup_user
-from app.dependencies import get_access_token
+from app.dependencies import get_current_user
 
 
 app = FastAPI(
@@ -103,9 +102,10 @@ def public_info():
 
 @app.get("/protected/profile")
 def protected_profile(
-    token: str = Depends(get_access_token)
+    user=Depends(get_current_user)
 ):
     return {
-        "message": "Protected profile endpoint",
-        "token": token
+        "id": user.id,
+        "email": user.email,
+        "created_at": user.created_at
     }
